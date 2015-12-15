@@ -1,1 +1,0 @@
-{"Bitstamp": {"EUR_BTC": {"ticker": "https://www.bitstamp.net/api/ticker/", "orderbook": "https://www.bitstamp.net/api/order_book/", "transactionHistory": "https://www.bitstamp.net/api/transactions/"}}}
