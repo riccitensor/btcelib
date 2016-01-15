@@ -32,6 +32,10 @@ class Api:
         self.name = ''
         self.pairs = {}
         self.data = {}
+        self.ticker = {}
+        self.trades = {}
+        self.ob = {}
+
 
         inp = apiHandler.load_api(file)
         self.data = inp
@@ -99,51 +103,73 @@ class Api:
             log.debug("Data written to file at {0}!".format(file))
         return d
 
-    def orderbook(self, pair, save=False, file='./orderbook.json'):
+    def get_orderbook(self, pair, save=False, file='./orderbook.json', update=True):
         """
         Interface function to get orderbook as dictionary
         :param pair: currency pair to get.
         :param save: bool, save to file yes/no
         :param file: path with filename for saving
+        :param update: Store data in class bool
         :return: dictionary with json data or None (if unsuccessful)
         """
         if self.check_pair(pair):
-            return self._get(pair, 'orderbook', save, file)
+            if update:
+                self.ob = self._get(pair, 'orderbook', save, file)
+                return self.ob
+            else:
+                return self._get(pair, 'orderbook', save, file)
         else:
             log.error("Pair not found! String may be invalid or self.pair "
                       "attribute empty! Returning 'None'..")
             return None
 
-    def transactions(self, pair, save=False, file='./transactions.json'):
+    def get_transactions(self, pair, save=False, file='./transactions.json', update=True):
         """
         Interface function to get transactionHistory as dictionary
         :param pair: currency pair to get.
         :param save: bool, save to file yes/no
         :param file: path with filename for saving
+        :param update: Store data in class bool
         :return: dictionary with json data or None (if unsuccessful)
         """
         if self.check_pair(pair):
-            return self._get(pair, 'transactionHistory', save, path)
+            if update:
+                self.trades = self._get(pair, 'transactionHistory', save, file)
+                return self.trades
+            else:
+                return self._get(pair, 'transactionHistory', save, file)
         else:
             log.error("Pair not found! String may be invalid or self.pair "
                       "attribute empty! Returning 'None'..")
             return None
 
-    def ticker(self, pair, save=False, file='./tickers.json'):
+    def get_ticker(self, pair, save=False, file='./tickers.json', update=True):
         """
         Interface function to get ticker as dictionary
         :param pair: currency pair to get.
         :param save: bool, save to file yes/no
         :param file: path with filename for saving
+        :param update: Store data in class bool
         :return: dictionary with json data or None (if unsuccessful)
         """
         if self.check_pair(pair):
-            return self._get(pair, 'ticker', save, path)
+            if update:
+                self.ticker = self._get(pair, 'ticker', save, file)
+                return self.ticker
+            else:
+                return self._get(pair, 'ticker', save, file)
         else:
             log.error("Pair not found! String may be invalid or self.pair "
                       "attribute empty! Returning 'None'..")
             return None
 
+    def plot_ob(self):
+        #do stuff
+
+    def plot_transactions(self):
+        #do stuff
+
+    def plot_ticker(self):
 
 
 
