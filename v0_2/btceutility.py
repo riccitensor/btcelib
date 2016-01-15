@@ -81,6 +81,7 @@ def recursive_decode(d):
             continue
     return new_dlocalbitcoins
 
+
 def median(seq):
     """
     Finds the median of a squence
@@ -92,6 +93,7 @@ def median(seq):
         return seq[len(seq) / 2 + (len(seq) % 2)]
     else:
         return (seq[len(seq)/2] + seq[len(seq)+1] / 2)
+
 
 def mean(seq):
     """
