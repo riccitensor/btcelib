@@ -3,92 +3,145 @@ Handles json data, specifically loading and dropping it to files, and getting it
 Logging facilities are provided for all functions, and can be identified by
 the logger name 'jsonHandler'.
 
-jsonHandler.fetch_json(url)
-    Retrieves JSON data from the given url. This is done using urllib.requests.
-    It returns the JSON data as a dictionary.
-    :param url: url to parse
-    :return: dictionary
-    
-jsonHandler.pack_json(data, file)
-    Dumps a given dictionary to a file with the given name in JSON format.
-    The file variable needs to specify the full path, otherwise it's stored
-    in the executing script's directory.
-    Raises an error if data is empty.
-    :param data: dictionary
-    :param file: file, incl path if different from path of executing script
-    :param compress: t/f flag for the compression option
-    :return: File
+    jsonHandler.fetch_json(url)
+        Retrieves JSON data from the given url. This is done using urllib.requests.
+        It returns the JSON data as a dictionary.
+        :param url: url to parse
+        :return: dictionary
 
-jsonHandler.unpack_json(file)
-    This loads JSON data from the given file and returns it as a dictionary.
-    :param file: file name containing json
-    :return: dictionary
+    jsonHandler.pack_json(data, file)
+        Uses json.dump to pack a dictionary into a file with the .json extension.
+        :param data: dictionary
+        :param file: file, incl path if different from path of executing script
+        :return: File
+
+    jsonHandler.unpack_json(file)
+        Loads json data from a given file and writes debugging data to log files.
+        :param file: file name containing json
+        :return:
+
+    jsonHandler.pack_tar(prefif, arch_name, fp='./', cleanup=False)
+        Packs all files that start with the string given as prefix and packs them
+        into a tarball.
+        :param prefix: string files start with
+        :param arch_name: name of the resulting tarball
+        :param fp: filepath to look for the files in
+        :param cleanup: remove compressed files; default off
+        :return: bool
+
+    jsonHandler.unpack_tar(fname, fp='./'):
+        unpacks a tar file which has been packaged with pack_tar().
+        :param fname: file name
+        :param fp: folder of tar
+        :return: bool
+
+    jsonHandler.merge_transactions(files, tar, path='./'):
+        Merges several transaction data json file objects into a single file.
+        must all be in a single directory.
+        :param files: list of files to merge
+        :param tar: name of the final file
+        :param path: dir to look for them in
+        :return: bool
+
+    jsonHandler.merge_orderbooks(files, tar, path='./'):
+        Merges several orderbook data json file objects into a single file.
+        must all be in a single directory.
+        :param files: list of files to merge
+        :param tar: name of the final file
+        :param path: dir to look for them in
+        :return: bool
+
+    jsonHandler.merge_tickers(files, tar, path='./'):
+        Merges several ticker data json file objects into a single file.
+        must all be in a single directory.
+        :param files: list of files to merge
+        :param tar: name of the final file
+        :param path: dir to look for them in
+        :return: bool
+
 
 
 apiHandler.py - Overview
+
 Handles loading and storing .api files. These files are simple json files at their heart, storing exchange names,
 available pairs and the responding urls.
 Logging facilities are provided for all functions, and can be identified by
 the logger name 'apiHandler'.
 
-apiHandler.py.save_api(name, pairs, urls, target='./')
-    Saves the given variables as a .api file in the given destination.
-    :param name: name of the exchange
-    :param pairs: list of pairs to be added for this exchange; i.e. [pair, ..];
-    must be a list!
-    :param urls: list of lists of url; i.e. [[url1,url2,urls3]]
-    must be a list!
-    :param target: desired destination for the created file.
-    :return: returns the name of the created file
+    apiHandler.save_api(name, pairs, urls, target='./')
+        Saves the given variables as a .api file in the given destination.
+        :param name: name of the exchange
+        :param pairs: list of pairs to be added for this exchange; i.e. [pair, ..];
+        must be a list!
+        :param urls: list of lists of url; i.e. [[url1,url2,urls3]]
+        must be a list!
+        :param target: desired destination for the created file.
+        :return: returns the name of the created file
 
-apiHandler.py.add_api()
-    Interactive api creation function - essentially it formats the user input for use with the save_api() function.
-    save_api() is safer to use (no pun intended), since the input is better controllable; the interactive prompt still has
-    a few issues and was originally intended for quick debugging.
-    :return: file name of created .api file
+    apiHandler.add_api()
+        Interactive api creation function - essentially it formats the user input for use with the save_api() function.
+        save_api() is safer to use (no pun intended), since the input is better controllable; the interactive prompt still has
+        a few issues and was originally intended for quick debugging.
+        :return: file name of created .api file
 
-apiHandler.py.load_api()
-    Loads JSON from a given file containing valid JSON.
-    :param file: name of the file (inclusive path if anywhere else saved than script's path)
-    :return: dictionary of api attributes
+    apiHandler.load_api()
+        Loads JSON from a given file containing valid JSON.
+        :param file: name of the file (inclusive path if anywhere else saved than script's path)
+        :return: dictionary of api attributes
+
+    apiHandler.init_api(src='./'):
+        Loads all .api files in given directory
+        :param src: directory to check - does not walk up or down.
+        :return: dictionary of all loaded apis
 
 
 
 btceinterface.py - Overview
+
 Logging facilities are provided for all functions, and can be identified by
 the logger name 'btceinterface'.
 
-btceinterface.Api(file=None)
-    *Class*
-    Provides a high-level interface to a bitcoin exchange api. It provides methods to access
-    real-time data for tickers, order books and transaction histories.
-    Upon creation, a path to an api file can be passed, and the contained json will be
-    loaded accordingly.
-    the file argument may be passed, but isn't necessary. If passed, data is loaded
-    from the given file; else the data can be loaded later on using the class' functions.
+    btceinterface.Api(file=None)
+        *Class*
+        Provides a high-level interface to a bitcoin exchange api. It provides methods to access
+        real-time data for tickers, order books and transaction histories.
+        Upon creation, a path to an api file can be passed, and the contained json will be
+        loaded accordingly.
+        the file argument may be passed, but isn't necessary. If passed, data is loaded
+        from the given file; else the data can be loaded later on using the class' functions.
 
-    btceinterface.Api().check_pair(self, pair=None):
-        Interface function, used to check if a pair exists in this class. By
-        default, this function checks if there is at least 1 pair present, and
-        writes the self.pair var to the logs.
-        :param pair: string containing pair name
-        :return: bool
+        btceinterface.Api().check_pair(self, pair=None):
+            Interface function, used to check if a pair exists in this class. By
+            default, this function checks if there is at least 1 pair present, and
+            writes the self.pair var to the logs.
+            :param pair: string containing pair name
+            :return: bool
 
-    btceinterface.Api().orderbook(self, pair=''):
-        Interface function to get orderbook as dictionary
-        :param pair: currency pair to get.
-        :return: dictionary with json data or None (if unsuccessful)
+        btceinterface.Api().get_orderbook(self, pair, save=False, file='./orderbook.json', update=True):
+            Interface function to get orderbook as dictionary;
+            :param pair: currency pair to get.
+            :param save: bool, save to file yes/no
+            :param file: path with filename for saving
+            :param update: Store data in class bool
+            :return: dictionary with json data or None (if unsuccessful)
+
+        btceinterface.Api().transactions(self, pair, save=False, file='./transactions.json', update=True):
+            Interface function to get transactionHistory as dictionary
+            :param pair: currency pair to get.
+            :param save: bool, save to file yes/no
+            :param file: path with filename for saving
+            :param update: Store data in class bool
+            :return: dictionary with json data or None (if unsuccessful)
 
 
-    btceinterface.Api().transactions(self, pair=''):
-        Interface function to get transactionHistory as dictionary
-        :param pair: currency pair to get.
-        :return: dictionary with json data or None (if unsuccessful)
+        btceinterface.Api().ticker(self, pair, save=False, file='./tickers.json', update=True):
+            Interface function to get ticker as dictionary
+            :param pair: currency pair to get.
+            :param save: bool, save to file yes/no
+            :param file: path with filename for saving
+            :param update: Store data in class bool
+            :return: dictionary with json data or None (if unsuccessful)
 
-    btceinterface.Api().ticker(self, pair=''):
-        Interface function to get ticker as dictionary
-        :param pair: currency pair to get.
-        :return: dictionary with json data or None (if unsuccessful)
 
 
 btceutility.py - Overview
@@ -96,3 +149,33 @@ btceutility.py - Overview
 Generally, this module contains internal utility functions. These include the current
 function for confirmation in interactive prompts (as seen in apiHandler.py).
 It can be safely ignored.
+
+    btceutility.is_dict(obj):
+        Checks if the object is a dictionary
+        :param obj:
+        :return: T/F
+
+    btceutility.recursive_decode(d):
+        Traverses all elements & subelements of a dict and encodes their keys, if any, to ascii.
+        :param d:
+        :return:
+
+    btceutility.median(seq):
+        Finds the median of a squence
+        :param seq:
+        :return:
+
+    btceutility.mean(seq):
+        finds the mean of a given list
+        :param seq:
+        :return:
+
+    btceutility.variance(seq):
+        Finds the variance of a given list
+        :param seq:
+        :return:
+
+    btceutility.stan_dev(seq):
+        finds the standard deviation of a given list
+        :param seq:
+        :return:

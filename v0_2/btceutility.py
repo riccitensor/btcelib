@@ -3,7 +3,7 @@ import math
 
 log = logging.getLogger(__name__)
 
-def get_conf(varname, var):
+def _get_conf(varname, var):
     """
     Loop for interactive prompts. returns true once finished.
     :param varname: String, containing name of the variable

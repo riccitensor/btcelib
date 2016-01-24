@@ -42,7 +42,6 @@ def pack_json(data, file):
     Uses json.dump to pack a dictionary into a file with the .json extension.
     :param data: dictionary
     :param file: file, incl path if different from path of executing script
-    :param compress: t/f flag for the compression option
     :return: File
     """
     if data is None:
@@ -81,7 +80,15 @@ def unpack_json(file):
 
 
 def pack_tar(prefix, arch_name, fp='./', cleanup=False):
-
+    """
+    Packs all files that start with the string given as prefix and packs them
+    into a tarball.
+    :param prefix: string files start with
+    :param arch_name: name of the resulting tarball
+    :param fp: filepath to look for the files in
+    :param cleanup: remove compressed files; default off
+    :return: bool
+    """
     files = []
     for file in os.listdir(fp):
         if file.startswith(prefix):
