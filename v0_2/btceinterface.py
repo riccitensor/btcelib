@@ -95,7 +95,7 @@ class Api:
 
         except KeyError:
             log.error("No such key! Entry doesn't exist! KeyError!")
-            log.debug("Used Keys were %s,%s%s", (self.name, pair, d_type))
+            log.debug("Used Keys were [%s][%s][%s]", (self.name, pair, d_type))
             return None
 
         if save:
