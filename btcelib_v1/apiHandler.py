@@ -6,7 +6,7 @@ managing .api files;
 import json
 import logging
 import os
-import btceutility
+
 
 log = logging.getLogger(__name__)
 
