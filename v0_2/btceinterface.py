@@ -170,7 +170,7 @@ class Api:
         #do stuff
 
     def plot_ticker(self):
-
+        #do stuff
 
 
 
