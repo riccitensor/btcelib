@@ -1,8 +1,8 @@
 
-import apiHandler
-import jsonHandler
 import logging
-import btceutility
+from btcelib_v1 import jsonHandler
+from btcelib_v1 import apiHandler
+
 
 log = logging.getLogger(__name__)
 
@@ -163,14 +163,7 @@ class Api:
                       "attribute empty! Returning 'None'..")
             return None
 
-    def plot_ob(self):
-        #do stuff
 
-    def plot_transactions(self):
-        #do stuff
-
-    def plot_ticker(self):
-        #do stuff
 
 
 
