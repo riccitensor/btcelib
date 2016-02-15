@@ -4,13 +4,36 @@ import jsonHandler
 log = logging.getLogger(__name__)
 
 class Exchange():
+    """
+    Comes with base functions for class extensions; i.e. _get_orderbook() to get
+    the base json from the api as specified on initialization;
+
+    """
+
     def __init__(self, url, query_mask, pairs, types, name):
+        """
+        initializes base-class.
+
+        :param url: str, url to api
+        :param query_mask: str
+        :param pairs: {'pair1': str, 'pair2': str, ... }
+        :param types: {'ticker': str, 'trades': str, 'orderbook':str}
+        :param name: str, name of exchange; usually homepage
+        :return:
+        """
         self.name = name
         self.url = url
         self.mask = query_mask
         self.pairs = pairs
         self.types = types
-    def make_query(self, _type, pair):
+
+    def _is_pair(self, pair):
+        if pair in self.pairs:
+            return True
+        else
+            return False
+
+    def make_query(self, t, p):
         try:
             m = self.mask.format(_type=t, pair=p)
         except KeyError:
@@ -18,9 +41,26 @@ class Exchange():
 
         return self.url + m
 
-    def get_orderbook(self, pair):
+    def _get_orderbook(self, pair):
+        if self._is_pair(pair):
+            return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
+                                                      self.pairs[pair]))
+        else:
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
 
-        make_query(self.types['orderbook'], self.pairs[pair])
+    def _get_ticker(self, pair):
+        if self._is_pair(pair):
+            return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
+                                                      self.pairs[pair]))
+        else:
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+
+    def _get_trades(self, pair):
+        if self._is_pair(pair):
+            return jsonHandler.fetch_json(self.make_query(self.types['trades'],
+                                             self.pairs[pair]))
+        else:
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
 
 class Kraken(Exchange):
     def __init__(self):
