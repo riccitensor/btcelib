@@ -1,5 +1,6 @@
 import logging
-import btcelib_v1.jsonHandler as jsonHandler
+import jsonHandler
+import decimal
 
 log = logging.getLogger(__name__)
 
@@ -103,17 +104,16 @@ class Exchange():
                     total += vol * p
         return total
 
-    def _trade_vol(self, pair, sum_, offers):
+    def _trade_vol(self, sum_, offers):
         """
         Calculates maximum volume purchasabale with given money sum and offers.
         Usable for both sell and buy offers.
-        :param pair:
-        :param amount:
-        :param offers:
-        :return:
+        :param amount: int or float
+        :param offers: list of lists in format [price, vol, timestamp]
+        :return: float
         """
         wallet = sum_
-        basket = 0.0
+        basket = decimal.Decimal(0.0)
 
         for offer in offers:
             p = offer[0]
@@ -124,7 +124,8 @@ class Exchange():
                     basket += vol
                 elif p * vol > wallet:
                     wallet -= wallet
-                    basket += (wallet / p)
+                    basket += decimal.Decimal(wallet / p).quantize(Decimal('0.00000001'), rounding=ROUND_DOWN)
+        return float(basket)
 
 
 '''
