@@ -1,5 +1,7 @@
 import logging
 import btcelib.jsonHandler as jsonHandler
+import decimal
+
 
 log = logging.getLogger(__name__)
 
@@ -56,26 +58,36 @@ class Exchange():
 
         return self.url + m
 
-    def _get_orderbook(self, pair):
-        if self._is_pair(pair):
-            return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
-                                                    self.pairs[pair]))
+    def _get_orderbook(self, pair, file=None):
+        if file is None:
+            if self._is_pair(pair):
+                return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
+                                                        self.pairs[pair]))
+            else:
+                raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
         else:
-            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+            return jsonHandler.unpack_json(file)
 
-    def _get_ticker(self, pair):
-        if self._is_pair(pair):
-            return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
-                                                      self.pairs[pair]))
+    def _get_ticker(self, pair, file=None):
+        if file is None:
+            if self._is_pair(pair):
+                return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
+                                                          self.pairs[pair]))
+            else:
+                raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
         else:
-            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+            return jsonHandler.unpack_json(file)
 
-    def _get_trades(self, pair):
-        if self._is_pair(pair):
-            return jsonHandler.fetch_json(self.make_query(self.types['trades'],
-                                             self.pairs[pair]))
+
+    def _get_trades(self, pair, file=None):
+        if file is None:
+            if self._is_pair(pair):
+                return jsonHandler.fetch_json(self.make_query(self.types['trades'],
+                                                 self.pairs[pair]))
+            else:
+                raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
         else:
-            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+            return jsonHandler.unpack_json(file)
 
     def _trade_vol(self, amount, offers):
         """
@@ -86,13 +98,14 @@ class Exchange():
         :param bids: list of lists format[price, vol, timestamp]
         :return:
         """
-        basket = 0.0
-        left_to_trade = amount
-        total = 0.0
+        d = decimal.Decimal
+        basket = d(0.0)
+        left_to_trade = d(amount)
+        total = d(0.0)
         for offer in offers:
-            p = float(offer[0])
-            vol = float(offer[1])
-            if left_to_trade > 0.0:
+            p = d(offer[0])
+            vol = d(offer[1])
+            if left_to_trade > d(0.0):
                 if vol > left_to_trade:
                     basket += left_to_trade
                     left_to_trade -= left_to_trade
@@ -101,7 +114,7 @@ class Exchange():
                     basket += vol
                     left_to_trade -= vol
                     total += vol * p
-        return total
+        return float(total)
 
     def _trade_budget(self, sum_, offers):
         """
@@ -111,19 +124,20 @@ class Exchange():
         :param offers: list of lists in format [price, vol, timestamp]
         :return: float
         """
-        wallet = sum_
-        basket = 0.0
-
+        d = decimal.Decimal
+        wallet = d(sum_)
+        basket = d(0.0)
         for offer in offers:
-            p = float(offer[0])
-            vol = float(offer[1])
+            p = d(offer[0]) # convert string to float
+            vol = d(offer[1]) # convert string to float
             if wallet > 0.0:
                 if p * vol <= wallet:
                     wallet -= p * vol
-                    basket += vol
+                    basket += round(vol, 8)
                 elif p * vol > wallet:
+                    basket += round(wallet / p, 8)
                     wallet -= wallet
-                    basket += (wallet / p)
-        return basket
+
+        return float(basket)
 
 
