@@ -23,7 +23,7 @@ def fetch_json(url):
         log.info("URL opened successfully!")
 
     except Exception as e:
-        log.error("Error while requesting data from URL! %s", e)
+        log.error("Error while requesting data from URL {}! {}".format(url, e))
         return None
 
     try:
