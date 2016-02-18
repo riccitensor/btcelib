@@ -5,7 +5,6 @@ Handles fetching json data from url, and packing/unpacking it to files.
 import urllib.request
 import logging
 import json
-import gzip
 
 log = logging.getLogger(__name__)
 
@@ -133,88 +132,6 @@ def unpack_tar(fname, fp='./'):
             return True
     else:
         return False
-
-
-def _merge_json(files, path, tar, type):
-    """
-    subroutine which merges a list of given files in given directory and saves it
-    as file named as given in tar. returns bool t/f
-    :param files: List of file names
-    :param path: path of files
-    :param type: 'ob', 'th' or 'ticker'
-    :return: Bool
-    """
-    js = {}
-    fcount = 0
-    for file in files:
-        try:
-            data = unpack_json('%s%s' % (path, file))
-            fcount += 1
-        except FileNotFoundError:
-            log.error("File %s doesn't exist at given location %s!", (file, path))
-        except :
-            log.error("Could not unpack JSON File %s%s! Skipping", (path, file))
-            continue
-
-        if type is 'th':
-            for trade in data:
-                js[trade['tid']] = trade
-
-        elif type is 'ob':
-            js[data['timestamp']] = {'asks': data['asks'], 'bids': data['bids']}
-
-        elif type is 'ticker':
-            js[data['timestamp']] = data
-
-        else:
-            raise AttributeError("Wrong Type passed!")
-
-    log.debug("%s files unpacked and loaded.", fcount)
-
-
-    try:
-        pack_json(js, '%s' % tar)
-        return True
-    except Exception as e:
-        log.error(e)
-        return False
-
-
-def merge_transactions(files, tar, path='./'):
-    """
-    Merges several transaction data json file objects into a single file.
-    must all be in a single directory.
-    :param files: list of files to merge
-    :param tar: name of the final file
-    :param path: dir to look for them in
-    :return: bool
-    """
-    return _merge_json(files, tar, path, 'th')
-
-
-def merge_orderbooks(files, tar, path='./'):
-    """
-    Merges several orderbook data json file objects into a single file.
-    must all be in a single directory.
-    :param files: list of files to merge
-    :param tar: name of the final file
-    :param path: dir to look for them in
-    :return: bool
-    """
-    return _merge_json(files, tar, path, 'ob')
-
-
-def merge_tickers(files, tar, path='./'):
-    """
-    Merges several ticker data json file objects into a single file.
-    must all be in a single directory.
-    :param files: list of files to merge
-    :param tar: name of the final file
-    :param path: dir to look for them in
-    :return: bool
-    """
-    return _merge_json(files, tar, path, 'ticker')
-
 
 if __name__ == '__main__':
     print(0)

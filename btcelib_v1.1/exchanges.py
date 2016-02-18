@@ -30,7 +30,7 @@ class Exchange():
     def _is_pair(self, pair):
         if pair in self.pairs:
             return True
-        else
+        else:
             return False
 
     def make_query(self, t, p):
@@ -44,7 +44,7 @@ class Exchange():
     def _get_orderbook(self, pair):
         if self._is_pair(pair):
             return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
-                                                      self.pairs[pair]))
+                                                    self.pairs[pair]))
         else:
             raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
 
@@ -62,85 +62,87 @@ class Exchange():
         else:
             raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
 
+'''
+Define Built-in Exchanges
+'''
+
 class Kraken(Exchange):
     def __init__(self):
         name='Kraken.com'
         query_mask='{_type}?pair={pair}'
         url='https://api.kraken.com/0/public/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class Bitbay(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='bitbay.net'
         query_mask='{pair}/{_type}.json'
         url='https://bitbay.net/API/Public/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class Bitstamp(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='bitstamp.net'
         query_mask='{_type}/{pair}'
         url='https://www.bitstamp.net/api/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class Btce(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='btc-e.com'
         query_mask='{_type}/{pair}'
         url='https://btc-e.com/api/3/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class Cex(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='cex.io'
         query_mask='{_type}/{pair}'
         url='https://cex.io/api/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class Coinbase(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='coinbase.com'
         query_mask='{pair}/{_type}'
         url='https://api.exchange.coinbase.com/products/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class Hitbtc(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='hitbtc.com'
         query_mask='{pair}/{_type}'
         url='http://api.hitbtc.com/api/1/public/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class itBit(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='itbit.com'
         query_mask='{pair}/{_type}'
         url='https://api.itbit.com/v1/markets/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
 
 class TheRockTradingCompany(Exchange):
     def __init__(self):
-        name='Kraken.com'
+        name='therocktrading.com'
         query_mask='{pair}/{_type}'
         url='https://api.therocktrading.com/v1/funds/'
         pairs={}
+        types={'orderbook': '', 'ticker':'', 'trades': ''}
         super(Kraken, self).__init__(url, query_mask, pairs, types, name)
-
-
-if __name__ == '__main__':
-    mask = '{a} then {b}'
-    a = 'Blergh'
-    b = 'Ugh'
-    try:
-        print(mask.format(b=b, a=a))
-    except KeyError:
-        print('Whoops.')
-        print(mask.format(a=a,b=b))
