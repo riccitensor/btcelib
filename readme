@@ -1,0 +1,12 @@
+To use btcelib, simply import it to your code:
+
+    import btcelib
+
+Load one of the supported exchange classes:
+    kraken = btcelib.Kraken.Kraken()
+
+..and use the available methods to get data from the exchange. i.e.:
+    print(kraken.ob('XBTEUR'))
+
+Check the code for documentation; it should be abundantly clear what each function does.
+
