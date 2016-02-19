@@ -99,6 +99,8 @@ class Exchange():
         :return:
         """
         d = decimal.Decimal
+        decimal.getcontext().prec = 8
+        decimal.getcontext().rounding = decimal.ROUND_DOWN
         basket = d(0.0)
         left_to_trade = d(amount)
         total = d(0.0)
@@ -125,6 +127,8 @@ class Exchange():
         :return: float
         """
         d = decimal.Decimal
+        decimal.getcontext().prec = 8
+        decimal.getcontext().rounding = decimal.ROUND_DOWN
         wallet = d(sum_)
         basket = d(0.0)
         for offer in offers:
@@ -133,9 +137,9 @@ class Exchange():
             if wallet > 0.0:
                 if p * vol <= wallet:
                     wallet -= p * vol
-                    basket += round(vol, 8)
+                    basket += vol
                 elif p * vol > wallet:
-                    basket += round(wallet / p, 8)
+                    basket += wallet / p
                     wallet -= wallet
 
         return float(basket)

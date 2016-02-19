@@ -1,4 +1,4 @@
-from exchange import Exchange
+from btcelib.exchange import Exchange
 import logging
 
 log = logging.getLogger(__name__)

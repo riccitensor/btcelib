@@ -1,4 +1,4 @@
-from btcelib.exchanges import Exchange
+from btcelib.exchange import Exchange
 
 '''
 Define Built-in Exchanges
