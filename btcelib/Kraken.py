@@ -82,9 +82,41 @@ class Kraken(Exchange):
                 return js['result'][key]
 
     def buy_budget(self, budget, pair):
+        """
+        Return the maximum amount of currency purchasable with the given budget.
+        :param budget: float/int
+        :param pair: str
+        :return: float
+        """
         a, _ = self.ob(pair)
         return super(Kraken, self)._trade_budget(budget, a)
 
     def buy_vol(self, vol, pair):
+        """
+        Return the total price for the given volume.
+        :param vol: float/int
+        :param pair: str
+        :return: float
+        """
         a, _ = self.ob(pair)
         return super(Kraken, self)._trade_vol(vol, a)
+
+    def sell_vol(self, vol, pair):
+        """
+        Return total expected return for given volume of currency
+        :param vol:
+        :param pair:
+        :return:
+        """
+        _, b = self.ob(pair)
+        return super(Kraken, self)._trade_vol(vol, b)
+
+    def sell_profit(self, profit, pair):
+        """
+        Return total volume required to obtain the given profit margin.
+        :profit: float/int
+        :pair: str
+        :return: float
+        """
+        _, b = self.ob(pair)
+        return super(Kraken, self)._trade_budget(profit, b)
