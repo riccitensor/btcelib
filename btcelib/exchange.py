@@ -59,35 +59,36 @@ class Exchange():
         return self.url + m
 
     def _get_orderbook(self, pair, file=None):
-        if file is None:
-            if self._is_pair(pair):
-                return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
-                                                        self.pairs[pair]))
-            else:
-                raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+        if self._is_pair(pair):
+            if file is not None:
+                jsonHandler.unpack_json(file)
+            return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
+                                                    self.pairs[pair]))
         else:
-            return jsonHandler.unpack_json(file)
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+
 
     def _get_ticker(self, pair, file=None):
-        if file is None:
-            if self._is_pair(pair):
-                return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
-                                                          self.pairs[pair]))
-            else:
-                raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+        if self._is_pair(pair):
+            if file is None:
+                jsonHandler.unpack_json(file)
+            return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
+                                                      self.pairs[pair]))
         else:
-            return jsonHandler.unpack_json(file)
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+
 
 
     def _get_trades(self, pair, file=None):
-        if file is None:
-            if self._is_pair(pair):
-                return jsonHandler.fetch_json(self.make_query(self.types['trades'],
-                                                 self.pairs[pair]))
-            else:
-                raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+
+        if self._is_pair(pair):
+            if file is None:
+                jsonHandler.unpack_json(file)
+            return jsonHandler.fetch_json(self.make_query(self.types['trades'],
+                                             self.pairs[pair]))
         else:
-            return jsonHandler.unpack_json(file)
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+
 
     def _trade_vol(self, amount, offers):
         """
@@ -133,7 +134,6 @@ class Exchange():
             p = d(offer[0]) # convert string to float
             vol = d(offer[1]) # convert string to float
             if wallet > 0.0:
-                print(basket)
                 if p * vol <= wallet:
                     wallet -= p * vol
                     basket += vol
