@@ -1,0 +1,12 @@
+To do:
+- setup.py
+
+- add more Exchanges
+
+- complete docs on wiki
+
+- write proper tutorial
+
+
+
+
