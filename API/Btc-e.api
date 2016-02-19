@@ -1,1 +1,0 @@
-{"Btc-e": {"USD_BTC": {"transactionHistory": "https://btc-e.com/api/3/trades/btc_usd", "ticker": "https://btc-e.com/api/3/ticker/btc_usd", "orderbook": "https://btc-e.com/api/3/depth/btc_usd"}}}

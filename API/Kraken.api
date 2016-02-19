@@ -1,1 +1,0 @@
-{"Kraken": {"EUR_BTC": {"ticker": "https://api.kraken.com/0/public/Ticker?pair=XBTEUR", "transactionHistory": "https://api.kraken.com/0/public/Trades?pair=XBTEUR", "orderbook": "https://api.kraken.com/0/public/Depth?pair=XBTEUR"}}}
