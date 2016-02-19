@@ -18,7 +18,9 @@ log = logging.getLogger()
 kraken = Kraken()
 
 
-print(kraken.buy_budget(100, 'XBTEUR'))
-print(kraken.buy_vol(100, 'LTCEUR'))
+btc = (kraken.buy_budget(100, 'XBTEUR'))
+ltc = (kraken.sell_vol(1, 'XBTLTC'))
+eur = kraken.sell_vol(ltc, 'LTCEUR')
+print(btc, ltc, eur)
 
 
