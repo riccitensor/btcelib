@@ -109,11 +109,9 @@ class Exchange():
             vol = d(offer[1])
             if left_to_trade > d(0.0):
                 if vol > left_to_trade:
-                    basket += left_to_trade
-                    left_to_trade -= left_to_trade
                     total += left_to_trade * p
+                    left_to_trade -= left_to_trade
                 elif vol < amount:
-                    basket += vol
                     left_to_trade -= vol
                     total += vol * p
         return float(total)
@@ -135,6 +133,7 @@ class Exchange():
             p = d(offer[0]) # convert string to float
             vol = d(offer[1]) # convert string to float
             if wallet > 0.0:
+                print(basket)
                 if p * vol <= wallet:
                     wallet -= p * vol
                     basket += vol
