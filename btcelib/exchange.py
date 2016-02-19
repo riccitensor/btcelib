@@ -30,6 +30,11 @@ class Exchange():
         self.pairs = pairs
         self.types = types
 
+    def __str__(self):
+        s = "Name: {}\nBase Url: {}\nQuery Mask: {}\nAvailable Pairs: {}\n" \
+            "Types: {}".format(self.name, self.url, self.mask, self.pairs, self.types)
+        return s
+
     def load(self, url=None, query_mask=None, pairs=None, types=None, name=None):
         c = 0
         if url is not None:
@@ -67,28 +72,24 @@ class Exchange():
         else:
             raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
 
-
     def _get_ticker(self, pair, file=None):
         if self._is_pair(pair):
-            if file is None:
+            if file is not None:
                 jsonHandler.unpack_json(file)
             return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
                                                       self.pairs[pair]))
         else:
             raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
 
-
-
     def _get_trades(self, pair, file=None):
 
         if self._is_pair(pair):
-            if file is None:
+            if file is not None:
                 jsonHandler.unpack_json(file)
             return jsonHandler.fetch_json(self.make_query(self.types['trades'],
                                              self.pairs[pair]))
         else:
             raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
-
 
     def _trade_vol(self, amount, offers):
         """

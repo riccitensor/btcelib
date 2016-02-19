@@ -3,6 +3,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
+
 class Kraken(Exchange):
     def __init__(self):
         name = 'Kraken.com'
@@ -53,13 +54,15 @@ class Kraken(Exchange):
     def trades(self, pair, raw=False, file=None):
         """
         Returns list of trades from JSON query. If raw is True, we'll return the
-        raw json query.
+        raw json query; if a file path is given, we'll also dump the raw value
+        to the given file.
         :param pair: str
         :param raw: bool
+        :file: str
         :return: list
         """
         if raw:
-            return super(Kraken, self)._get_trades(pair, file)
+                return super(Kraken, self)._get_trades(pair, file)
         else:
             js = super(Kraken, self)._get_trades(pair, file)
             for key in js['result']:
@@ -91,6 +94,16 @@ class Kraken(Exchange):
         a, _ = self.ob(pair)
         return super(Kraken, self)._trade_budget(budget, a)
 
+    def sell_profit(self, profit, pair):
+        """
+        Return total volume required to obtain the given profit margin.
+        :profit: float/int
+        :pair: str
+        :return: float
+        """
+        _, b = self.ob(pair)
+        return super(Kraken, self)._trade_budget(profit, b)
+
     def buy_vol(self, vol, pair):
         """
         Return the total price for the given volume.
@@ -111,12 +124,3 @@ class Kraken(Exchange):
         _, b = self.ob(pair)
         return super(Kraken, self)._trade_vol(vol, b)
 
-    def sell_profit(self, profit, pair):
-        """
-        Return total volume required to obtain the given profit margin.
-        :profit: float/int
-        :pair: str
-        :return: float
-        """
-        _, b = self.ob(pair)
-        return super(Kraken, self)._trade_budget(profit, b)

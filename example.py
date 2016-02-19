@@ -1,5 +1,4 @@
 import logging
-
 from btcelib.Kraken import Kraken
 
 logging.basicConfig(level=logging.DEBUG,
@@ -17,10 +16,7 @@ log = logging.getLogger()
 
 kraken = Kraken()
 
+for pair in kraken.pairs:
+    print(kraken.ticker(pair))
 
-btc = (kraken.buy_budget(100, 'XBTEUR'))
-ltc = (kraken.sell_vol(1, 'XBTLTC'))
-eur = kraken.sell_vol(ltc, 'LTCEUR')
-print(btc, ltc, eur)
-
-
+print(kraken)
