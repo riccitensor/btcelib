@@ -5,6 +5,12 @@ log = logging.getLogger(__name__)
 
 
 class Bitstamp(Exchange):
+    """
+    Bitstamp only has BTC_USD as a pair, hence the PAIR paramater does not need
+    to be passed when querying the exchange.
+
+    All functions calculating budgets or prices do NOT include trading fees.
+    """
     def __init__(self):
         name = 'bitstamp.net'
         query_mask = '{_type}/{pair}'
@@ -19,59 +25,74 @@ class Bitstamp(Exchange):
                  'conversion': 'eur_usd'}
         super(Bitstamp, self).__init__(url, query_mask, pairs, types, name)
 
-    def ob(self, pair='BTCUSD', raw=False, file=None):
+    def ob(self, raw=False, file=None):
+        """
+        Returns the ticker as two lists; if file is passed, saves data as given
+        file as well.
+        If raw is True, return is a dict
+        :param raw: bool
+        :param file: str, filepath/name
+        :return: list, list
+        """
         if raw:
-            return super(Bitstamp, self)._get_orderbook(pair, file)
+            return super(Bitstamp, self)._get_orderbook('BTCUSD', file)
         else:
-            js = super(Bitstamp, self)._get_orderbook(pair, file)
-            for key in js['result']:
-                a = js['asks']
-                b = js['bids']
-                return a, b
+            js = super(Bitstamp, self)._get_orderbook('BTCUSD', file)
+            a = js['asks']
+            b = js['bids']
+            return a, b
 
-    def trades(self, pair, file=None):
-        return super(Bitstamp, self)._get_trades(pair, file)
+    def trades(self, file=None):
+        """
+        Returns all recent trades as dict; if file is passed, saves data as
+        given file as well.
+        :param file: str, filepath/name
+        :return: dict
+        """
+        return super(Bitstamp, self)._get_trades('BTCUSD', file)
 
-    def ticker(self, pair, file=None):
-        return super(Bitstamp, self)._get_ticker(pair, file)
+    def ticker(self, file=None):
+        """
+        Returns the ticker as dict; if file is passed, saves data as given file
+        as well.
+        :param file: str, filepath/name
+        :return: dict
+        """
+        return super(Bitstamp, self)._get_ticker('BTCUSD', file)
 
-    def buy_budget(self, budget, pair):
+    def buy_budget(self, budget):
         """
         Return the maximum amount of currency purchasable with the given budget.
         :param budget: float/int
-        :param pair: str
         :return: float
         """
-        a, _ = self.ob(pair)
+        a, _ = self.ob()
         return super(Bitstamp, self)._trade_budget(budget, a)
 
-    def sell_profit(self, profit, pair):
+    def sell_profit(self, profit):
         """
         Return total volume required to obtain the given profit margin.
         :profit: float/int
-        :pair: str
         :return: float
         """
-        _, b = self.ob(pair)
+        _, b = self.ob()
         return super(Bitstamp, self)._trade_budget(profit, b)
 
-    def buy_vol(self, vol, pair):
+    def buy_vol(self, vol):
         """
         Return the total price for the given volume.
         :param vol: float/int
-        :param pair: str
         :return: float
         """
-        a, _ = self.ob(pair)
+        a, _ = self.ob()
         return super(Bitstamp, self)._trade_vol(vol, a)
 
-    def sell_vol(self, vol, pair):
+    def sell_vol(self, vol):
         """
         Return total expected return for given volume of currency
         :param vol:
-        :param pair:
         :return:
         """
-        _, b = self.ob(pair)
+        _, b = self.ob()
         return super(Bitstamp, self)._trade_vol(vol, b)
 
