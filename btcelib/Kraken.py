@@ -5,6 +5,9 @@ log = logging.getLogger(__name__)
 
 
 class Kraken(Exchange):
+    """
+    Any functions calculating prices or Volume do NOT include trading fees!
+    """
     def __init__(self):
         name = 'Kraken.com'
         query_mask = '{_type}?pair={pair}'
