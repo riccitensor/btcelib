@@ -3,6 +3,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
+
 class Bitstamp(Exchange):
     def __init__(self):
         name = 'bitstamp.net'
@@ -33,7 +34,6 @@ class Bitstamp(Exchange):
 
     def ticker(self, pair, file=None):
         return super(Bitstamp, self)._get_ticker(pair, file)
-
 
     def buy_budget(self, budget, pair):
         """
