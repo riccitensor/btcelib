@@ -9,16 +9,16 @@ class Kraken(Exchange):
         name = 'Kraken.com'
         query_mask = '{_type}?pair={pair}'
         url = 'https://api.kraken.com/0/public/'
-        pairs = {'XBTEUR': 'XBTEUR',
-                 'XBTUSD': 'XBTUSD',
-                 'XBTCAD': 'XBTCAD',
-                 'XBTGBP': 'XBTGBP',
-                 'XBTJPY': 'XBTJPY',
-                 'XBTLTC': 'XBTLTC',
-                 'XBTNMC': 'XBTNMC',
-                 'XBTXDG': 'XBTXDG',
-                 'XBTXLM': 'XBTXLM',
-                 'XBTXRP': 'XBTXRP',
+        pairs = {'BTCEUR': 'XBTEUR',
+                 'BTCUSD': 'XBTUSD',
+                 'BTCCAD': 'XBTCAD',
+                 'BTCGBP': 'XBTGBP',
+                 'BTCJPY': 'XBTJPY',
+                 'BTCLTC': 'XBTLTC',
+                 'BTCNMC': 'XBTNMC',
+                 'BTCXDG': 'XBTXDG',
+                 'BTCXLM': 'XBTXLM',
+                 'BTCXRP': 'XBTXRP',
                  'LTCEUR': 'LTCEUR',
                  'LTCUSD': 'LTCUSD',
                  'ETHEUR': 'ETHEUR',
@@ -81,6 +81,15 @@ class Kraken(Exchange):
             return super(Kraken, self)._get_ticker(pair, file)
         else:
             js = super(Kraken, self)._get_ticker(pair, file)
+            for key in js['result']:
+                return js['result'][key]
+
+    def spread(self, pair, raw=False, file=None):
+        if raw:
+            return super(Kraken, self)._get_data(pair, 'spread', file)
+        else:
+            #return js
+            js = super(Kraken, self)._get_data(pair, 'spread', file)
             for key in js['result']:
                 return js['result'][key]
 
