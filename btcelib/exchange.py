@@ -6,7 +6,7 @@ import decimal
 log = logging.getLogger(__name__)
 
 
-class Exchange():
+class Exchange:
     """
     Comes with base functions for class extensions; i.e. _get_orderbook() to get
     the base json from the api as specified on initialization;
@@ -63,33 +63,24 @@ class Exchange():
 
         return self.url + m
 
-    def _get_orderbook(self, pair, file=None):
-        if self._is_pair(pair):
+    def _get_data(self, pair, _type, file):
+        if self._is_pair(pair)_:
             if file is not None:
                 jsonHandler.unpack_json(file)
-            return jsonHandler.fetch_json(self.make_query(self.types['orderbook'],
-                                                    self.pairs[pair]))
+            return jsonHandler.fetch_json(self.make_query(self.types[_type],
+                                                          self.pairs[pair]))
         else:
-            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+            raise ValueError('{} is not a tradeable pair at{}'.format(pair,
+                                                                      self.name))
+
+    def _get_orderbook(self, pair, file=None):
+        return self._get_data(pair, 'orderbook', file)
 
     def _get_ticker(self, pair, file=None):
-        if self._is_pair(pair):
-            if file is not None:
-                jsonHandler.unpack_json(file)
-            return jsonHandler.fetch_json(self.make_query(self.types['ticker'],
-                                                      self.pairs[pair]))
-        else:
-            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+        return self._get_data(pair, 'ticker', file)
 
     def _get_trades(self, pair, file=None):
-
-        if self._is_pair(pair):
-            if file is not None:
-                jsonHandler.unpack_json(file)
-            return jsonHandler.fetch_json(self.make_query(self.types['trades'],
-                                             self.pairs[pair]))
-        else:
-            raise ValueError('{} is not a tradeable pair at{}'.format(pair, self.name))
+        return self._get_data(pair, 'trades', file)
 
     def _trade_vol(self, amount, offers):
         """
